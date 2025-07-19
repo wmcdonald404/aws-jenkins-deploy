@@ -1,0 +1,25 @@
+{
+    "containerUser": "vscode",	
+	"image": "mcr.microsoft.com/devcontainers/base:debian",
+	"name": "Devcontainer / Debian / wmcdonald404.co.uk",
+	"onCreateCommand": ".devcontainer/bin/onCreateCommand.sh",
+	"remoteEnv": {
+        "PODMAN_USERNS": "keep-id"
+	},
+	"runArgs": [
+		"--security-opt", "label=disable",
+		"--hostname=devcontainer.wmcdonald404.co.uk"
+	],
+	// "updateContentCommand": ".devcontainer/bin/updateContentCommand.sh",
+	"updateRemoteUserUID": true
+    
+}
+
+// ghcr.io/devcontainers/features/aws-cli:1
+// ghcr.io/devcontainers/features/terraform:1
+// ghcr.io/robbert229/devcontainer-features/opentofu:1
+
+// "features": {
+// 	"ghcr.io/devcontainers/features/aws-cli": {},
+// 	"ghcr.io/robbert229/devcontainer-features/opentofu:1"
+// },
