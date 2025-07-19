@@ -50,3 +50,10 @@ PS> terraform plan -var-file="sample.tfvars" -auto-approve
 ```
 wmcdonald@fedora tf-build ±|main ✗|→ terraform apply -var-file="sample.tfvars" -auto-approve
 ```
+
+
+# References
+
+- [https://renatogolia.com/2020/10/12/working-with-aws-in-devcontainers/](<https://renatogolia.com/2020/10/12/working-with-aws-in-devcontainers/>)
+- [https://happihacking.com/blog/posts/2024/dev-containers-uids/](<https://happihacking.com/blog/posts/2024/dev-containers-uids/>)
+- [https://dev.to/graezykev/dev-containers-part-2-image-features-workspace-environment-variables-375o](<https://dev.to/graezykev/dev-containers-part-2-image-features-workspace-environment-variables-375o>)

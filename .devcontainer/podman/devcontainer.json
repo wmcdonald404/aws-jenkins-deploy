@@ -1,6 +1,9 @@
 {
     "containerUser": "vscode",	
 	"image": "mcr.microsoft.com/devcontainers/base:debian",
+	"mounts": [
+		"source=${env:HOME}${env:USERPROFILE}/.aws,target=/home/vscode/.aws/,type=bind"
+	],
 	"name": "Devcontainer / Debian / wmcdonald404.co.uk",
 	"onCreateCommand": ".devcontainer/bin/onCreateCommand.sh",
 	"remoteEnv": {
@@ -10,10 +13,10 @@
 		"--security-opt", "label=disable",
 		"--hostname=devcontainer.wmcdonald404.co.uk"
 	],
-	// "updateContentCommand": ".devcontainer/bin/updateContentCommand.sh",
 	"updateRemoteUserUID": true
-    
 }
+
+// "updateContentCommand": ".devcontainer/bin/updateContentCommand.sh",
 
 // ghcr.io/devcontainers/features/aws-cli:1
 // ghcr.io/devcontainers/features/terraform:1
