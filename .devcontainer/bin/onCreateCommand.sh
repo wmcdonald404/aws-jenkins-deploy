@@ -8,12 +8,20 @@ sudo apt-get -y upgrade
 sudo apt-get install -y liquidprompt awscli
 liquidprompt_activate
 cat <<EOF >> ~/.bashrc
-
 LP_ENABLE_SHLVL=0
 EOF
 
 # install the AWS CLI (~/.aws/ is bind-mounted in the devcontainer.json)
 sudo apt-get install -y awscli
+
+cat <<EOF >> ~/.bashrc
+
+# Auto-generate aliases to set AWS_PROFILE from ~/.aws/config
+for profile in \$(grep '^\[profile' ~/.aws/config | sed 's/[][]//g' | awk '{ print \$NF }' | grep -v default); 
+do 
+    alias \$profile="export AWS_PROFILE=\$profile"
+done
+EOF
 
 # install Opentofu (https://opentofu.org/docs/intro/install/deb/)
 # Download the installer script:
