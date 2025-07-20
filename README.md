@@ -1,11 +1,53 @@
 # leeroy-deploy
 Boostrap an environment, deploy resources via paramaterised, versioned Jenkins pipeline.
 
-## Let's mirror some upstream AWS Terraform modules
+## Overview
+This repository illustrates one potential directory layout that could be used to manage resources deployed into multiple AWS member accounts. The intention is to have a local set of [central Terraform modules](<https://github.com/terraform-aws-modules>), then per-environment configuration diverging from the baseline only where absolutely necessary. 
+
+Keeping the structure of the codebase clear, concise [and DRY](<https://en.wikipedia.org/wiki/Don%27t_repeat_yourself>).
+
+We have 3 distinct AWS member accounts.
+
+| AWS Member Account | Purpose               |
+| ---                | ---                   |
+| sharedsvc          | Shared services       |
+| development        | Development workloads | 
+| production         | Production workloads  | 
+
+The structure of the codebase is shown below in a simplified form. Common configuration comes from a single set of shared modules. Environment-specific configuration deviation exists per resource per-env. 
 
 ```
-$ git clone https://github.com/terraform-aws-modules/terraform-aws-vpc /workspaces/leeroy/tf/modules/terraform-aws-modules/vpc/aws
-$ rm -rf $_/.git
+.
+└── tf
+    ├── env
+    │   ├── development
+    │   │   ├── ec2
+    │   │   └── vpc
+    │   ├── production
+    │   │   ├── ec2
+    │   │   └── vpc
+    │   └── sharedsvc
+    │       ├── ec2
+    │       └── vpc
+    └── modules
+        ├── terraform-aws-ec2-instance
+        └── terraform-aws-vpc
+```                
+
+## Mirror upstream modules 
+
+Let's mirror some upstream AWS Terraform modules.
+
+1. Clone the AWS VPC module and clear its upstream Git and Github history.
+```
+$ git clone https://github.com/terraform-aws-modules/terraform-aws-vpc /workspaces/leeroy/tf/modules/terraform-aws-vpc
+$ rm -rf $_/.git $_/.github
+```
+
+2. Clone the AWS EC2 instance module and clear its upstream Git and Github history.
+```
+git clone https://github.com/terraform-aws-modules/terraform-aws-ec2-instance /workspaces/leeroy/tf/modules/terraform-aws-ec2-instance
+rm -rf $_/.git $_/.github
 ```
 
 ## First create the development VPC
