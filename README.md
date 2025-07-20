@@ -1,7 +1,12 @@
 # leeroy-deploy
 Boostrap an environment, deploy resources via paramaterised, versioned Jenkins pipeline.
 
-## Let's mirror some upstream AW
+## Let's mirror some upstream AWS Terraform modules
+
+```
+$ git clone https://github.com/terraform-aws-modules/terraform-aws-vpc /workspaces/leeroy/tf/modules/terraform-aws-modules/vpc/aws
+$ rm -rf $_/.git
+```
 
 ## First create the development VPC
 
