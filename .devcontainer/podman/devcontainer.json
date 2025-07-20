@@ -1,8 +1,16 @@
 {
     "containerUser": "vscode",	
+	"customizations": {
+        "vscode": {
+            "extensions": [
+                "hashicorp.terraform"
+            ]
+        }
+	},
 	"image": "mcr.microsoft.com/devcontainers/base:debian",
 	"mounts": [
-		"source=${env:HOME}${env:USERPROFILE}/.aws,target=/home/vscode/.aws/,type=bind"
+		"source=${env:HOME}${env:USERPROFILE}/.aws,target=/home/vscode/.aws/,type=bind",
+		"source=${env:HOME}${env:USERPROFILE}/.ssh,target=/home/vscode/.ssh/,type=bind"
 	],
 	"name": "Devcontainer / Debian / wmcdonald404.co.uk",
 	"onCreateCommand": ".devcontainer/bin/onCreateCommand.sh",
@@ -17,11 +25,9 @@
 }
 
 // "updateContentCommand": ".devcontainer/bin/updateContentCommand.sh",
-
 // ghcr.io/devcontainers/features/aws-cli:1
 // ghcr.io/devcontainers/features/terraform:1
 // ghcr.io/robbert229/devcontainer-features/opentofu:1
-
 // "features": {
 // 	"ghcr.io/devcontainers/features/aws-cli": {},
 // 	"ghcr.io/robbert229/devcontainer-features/opentofu:1"
