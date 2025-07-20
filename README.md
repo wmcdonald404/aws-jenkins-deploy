@@ -8,11 +8,11 @@ Keeping the structure of the codebase clear, concise [and DRY](<https://en.wikip
 
 We have 3 distinct AWS member accounts.
 
-| AWS Member Account | Purpose               |
-| ---                | ---                   |
-| sharedsvc          | Shared services       |
-| development        | Development workloads | 
-| production         | Production workloads  | 
+| AWS Member Account | Purpose               | CIDR        |
+| ---                | ---                   | ---         |
+| sharedsvc          | Shared services       | 10.0.0.0/16 |
+| development        | Development workloads | 10.2.0.0/16 |
+| production         | Production workloads  | 10.4.0.0/16 |
 
 The structure of the codebase is shown below in a simplified form. Common configuration comes from a single set of shared modules. Environment-specific configuration deviation exists per resource per-env. 
 
