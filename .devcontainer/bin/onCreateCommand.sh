@@ -38,3 +38,6 @@ chmod +x install-opentofu.sh
 
 # Remove the installer:
 rm -f install-opentofu.sh
+
+# Enable bash completion
+tofu -install-autocomplete
