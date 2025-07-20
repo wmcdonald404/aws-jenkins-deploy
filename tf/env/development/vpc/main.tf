@@ -1,7 +1,7 @@
 # https://registry.terraform.io/modules/terraform-aws-modules/vpc/aws/latest
 
 module "vpc" {
-  source = "../../../modules/terraform-aws-modules/vpc/aws/"
+  source = "../../../modules/terraform-aws-vpc/"
 
   name = "development-vpc"
   cidr = "10.0.0.0/16"
