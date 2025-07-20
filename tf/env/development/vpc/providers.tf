@@ -24,5 +24,5 @@ terraform {
 # https://search.opentofu.org/provider/hashicorp/aws/latest
 provider "aws" {
   region              = var.aws_region
-  allowed_account_ids = [var.aws_target_account_id]
+  allowed_account_ids = [var.aws_account]
 }

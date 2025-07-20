@@ -3,7 +3,7 @@
 module "vpc" {
   source = "../../../modules/terraform-aws-modules/vpc/aws/"
 
-  name = "${var.environment_prefix}-vpc"
+  name = "development-vpc"
   cidr = "10.0.0.0/16"
 
   azs             = ["eu-west-1a", "eu-west-1b", "eu-west-1c"]
@@ -12,9 +12,10 @@ module "vpc" {
 
   enable_nat_gateway = false
   enable_vpn_gateway = false
+  # create_egress_only_igw = true
 
   tags = {
     Terraform = "true"
-    Environment = "${var.environment_prefix}"
+    Environment = "development"
   }
 }
