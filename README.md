@@ -18,42 +18,45 @@ Linux:
 ```bash
 AWS_ACCOUNT=$(aws sts get-caller-identity | jq -r .Account)
 AWS_REGION=eu-west-1
-TF_VAR_aws_target_account_id=$AWS_ACCOUNT
+export TF_VAR_aws_region=$AWS_REGION
+export TF_VAR_aws_account=$AWS_ACCOUNT
 ```
 
 Powershell:
 ```pwsh
 $AWS_ACCOUNT=(aws sts get-caller-identity | jq -r .Account)
 $AWS_REGION="eu-west-1"
-$Env:TF_VAR_aws_target_account_id=$AWS_ACCOUNT
+$Env:TF_VAR_aws_region=$AWS_REGION
+$Env:TF_VAR_aws_account=$AWS_ACCOUNT
 ```
 
 2. Check the variables
 
 ```bash
-echo -e "AWS_ACCOUNT: $AWS_ACCOUNT\nAWS_REGION: $AWS_REGION\nTF_VAR_aws_target_account_id: $TF_VAR_aws_target_account_id\n"
+echo -e "AWS_ACCOUNT: $AWS_ACCOUNT\nAWS_REGION: $AWS_REGION\nTF_VAR_aws_account: $TF_VAR_aws_account\nTF_VAR_aws_region: $TF_VAR_aws_region\n"
 ```
 
 ```pwsh
-Write-Output  "AWS_ACCOUNT: $AWS_ACCOUNT`nAWS_REGION: $AWS_REGION`nTF_VAR_aws_target_account_id: $TF_VAR_aws_target_account_id"
+Write-Output "AWS_ACCOUNT: $AWS_ACCOUNT`nAWS_REGION: $AWS_REGION`nTF_VAR_aws_account: $TF_VAR_aws_account`nTF_VAR_aws_region: $TF_VAR_aws_region"
 ```
 
-5. Initialise the Terraform backend
+3. Initialise the Terraform backend
 
 ```
-PS> terraform init
+$ cd tf/env/development/vpc/
+$ terraform init
 ```
 
-6. Run a Terraform plan to validate what it would do
+4. Run a Terraform plan to validate what it would do
 
 ```
-PS> terraform plan -var-file="sample.tfvars" -auto-approve
+PS> terraform plan
 ```
 
-7. Let's go....
+5. Run the Terraform apply to create the development VPC
 
 ```
-wmcdonald@fedora tf-build ±|main ✗|→ terraform apply -var-file="sample.tfvars" -auto-approve
+$ terraform apply -auto-approve
 ```
 
 
