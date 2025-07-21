@@ -38,14 +38,52 @@ The structure of the codebase is shown below in a simplified form. Common config
 
 Let's mirror some upstream AWS Terraform modules.
 
-1. Clone the AWS VPC module and clear its upstream Git and Github history.
+| Terraform Module   | Purpose               | URL        |
+| ---                | ---                   | ---         |
+| [terraform-aws-vpc](<https://github.com/terraform-aws-modules/terraform-aws-vpc>) | VPC creation | [https://github.com/terraform-aws-modules/terraform-aws-vpc](<https://github.com/terraform-aws-modules/terraform-aws-vpc>) |
+| [terraform-aws-s3-bucket](<https://github.com/terraform-aws-modules/terraform-aws-s3-bucket>)              | S3 buckets | [https://github.com/terraform-aws-modules/terraform-aws-s3-bucket](<https://github.com/terraform-aws-modules/terraform-aws-s3-bucket>) |
+| [terraform-aws-key-pair](<https://github.com/terraform-aws-modules/terraform-aws-key-pair>) | Managing SSH key pairs  | [https://github.com/terraform-aws-modules/terraform-aws-key-pair](<https://github.com/terraform-aws-modules/terraform-aws-key-pair>) |
+| [terraform-aws-ec2-instance](<https://github.com/terraform-aws-modules/terraform-aws-ec2-instance>)| Creating EC2 instances| [https://github.com/terraform-aws-modules/terraform-aws-ec2-instance](<https://github.com/terraform-aws-modules/terraform-aws-ec2-instance>)
+
+If we have an empty module tree we can loop over each repo and pull it down as follows:
+
 ```
+MODULE_DIR=/workspaces/leeroy/tf/modules/
+declare -a URLS=(
+"https://github.com/terraform-aws-modules/terraform-aws-vpc"
+"https://github.com/terraform-aws-modules/terraform-aws-s3-bucket"
+"https://github.com/terraform-aws-modules/terraform-aws-key-pair"
+"https://github.com/terraform-aws-modules/terraform-aws-ec2-instance")
+
+for URL in "${URLS[@]}"
+do
+    git clone $URL ${MODULE_DIR}/$(basename $URL)
+    rm -rf $_/.git $_/.github
+done
+```
+
+If we need to do individual modules we can process each as follows:
+
+1. Clone the AWS VPC module and clear its upstream Git and Github history.
+```bash
 $ git clone https://github.com/terraform-aws-modules/terraform-aws-vpc /workspaces/leeroy/tf/modules/terraform-aws-vpc
 $ rm -rf $_/.git $_/.github
 ```
 
-2. Clone the AWS EC2 instance module and clear its upstream Git and Github history.
+2. Clone the AWS S3 bucket module and clear its upstream Git and Github history.
+```bash
+git clone https://github.com/terraform-aws-modules/terraform-aws-s3-bucket /workspaces/leeroy/tf/modules/terraform-aws-s3-bucket
+rm -rf $_/.git $_/.github
 ```
+
+3. Clone the AWS Key Pair module
+```bash
+git clone https://github.com/terraform-aws-modules/terraform-aws-key-pair /workspaces/leeroy/tf/modules/terraform-aws-key-pair
+rm -rf $_/.git $_/.github
+```
+
+4. Clone the AWS EC2 instance module and clear its upstream Git and Github history.
+```bash
 git clone https://github.com/terraform-aws-modules/terraform-aws-ec2-instance /workspaces/leeroy/tf/modules/terraform-aws-ec2-instance
 rm -rf $_/.git $_/.github
 ```
@@ -85,7 +123,7 @@ Write-Output "AWS_ACCOUNT: $AWS_ACCOUNT`nAWS_REGION: $AWS_REGION`nTF_VAR_aws_acc
 3. Initialise the Terraform backend
 
 ```
-$ cd tf/env/development/vpc/
+$ cd tf/env/sharedsvc/vpc/
 $ terraform init
 ```
 
@@ -95,7 +133,7 @@ $ terraform init
 PS> terraform plan
 ```
 
-5. Run the Terraform apply to create the development VPC
+5. Run the Terraform apply to create the shared service VPC
 
 ```
 $ terraform apply -auto-approve
