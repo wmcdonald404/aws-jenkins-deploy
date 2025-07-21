@@ -122,20 +122,20 @@ Write-Output "AWS_ACCOUNT: $AWS_ACCOUNT`nAWS_REGION: $AWS_REGION`nTF_VAR_aws_acc
 
 3. Initialise the Terraform backend
 
-```
+```bash
 $ cd tf/env/sharedsvc/vpc/
 $ terraform init
 ```
 
 4. Run a Terraform plan to validate what it would do
 
-```
-PS> terraform plan
+```bash
+$ terraform plan
 ```
 
 5. Run the Terraform apply to create the shared service VPC
 
-```
+```bash
 $ terraform apply -auto-approve
 ```
 
