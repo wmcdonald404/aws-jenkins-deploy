@@ -3,7 +3,7 @@
 module "vpc" {
   source = "../../../modules/terraform-aws-vpc/"
 
-  name = "sharedsvc-vpc"
+  name = "${var.aws_env}-vpc"
   cidr = "10.0.0.0/16"
 
   azs             = ["eu-west-1a", "eu-west-1b", "eu-west-1c"]
@@ -16,6 +16,6 @@ module "vpc" {
 
   tags = {
     Terraform = "true"
-    Environment = "sharedsvc"
+    Environment = "${var.aws_env}"
   }
 }
