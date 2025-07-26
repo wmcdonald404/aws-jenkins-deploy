@@ -2,7 +2,7 @@
 Boostrap an environment, deploy resources via paramaterised, versioned Jenkins pipeline.
 
 ## Overview
-This repository illustrates one potential directory layout that could be used to manage resources deployed into multiple AWS member accounts. The intention is to have a local set of [central Terraform modules](<https://github.com/terraform-aws-modules>), then per-environment configuration diverging from the baseline only where absolutely necessary. 
+This repository illustrates one potential directory layout that could be used to manage resources deployed into multiple AWS member accounts. The intention is to have a local set of [central OpenTofu modules](<https://github.com/terraform-aws-modules>), then per-environment configuration diverging from the baseline only where absolutely necessary. 
 
 Keeping the structure of the codebase clear, concise [and DRY](<https://en.wikipedia.org/wiki/Don%27t_repeat_yourself>).
 
@@ -36,9 +36,9 @@ The structure of the codebase is shown below in a simplified form. Common config
 
 ## Mirror upstream modules 
 
-Let's mirror some upstream AWS Terraform modules.
+Let's mirror some upstream AWS OpenTofu modules.
 
-| Terraform Module   | Purpose               | URL        |
+| OpenTofu Module   | Purpose               | URL        |
 | ---                | ---                   | ---         |
 | [terraform-aws-vpc](<https://github.com/terraform-aws-modules/terraform-aws-vpc>) | VPC creation | [https://github.com/terraform-aws-modules/terraform-aws-vpc](<https://github.com/terraform-aws-modules/terraform-aws-vpc>) |
 | [terraform-aws-s3-bucket](<https://github.com/terraform-aws-modules/terraform-aws-s3-bucket>)              | S3 buckets | [https://github.com/terraform-aws-modules/terraform-aws-s3-bucket](<https://github.com/terraform-aws-modules/terraform-aws-s3-bucket>) |
@@ -88,60 +88,124 @@ git clone https://github.com/terraform-aws-modules/terraform-aws-ec2-instance /w
 rm -rf $_/.git $_/.github
 ```
 
-## First create the development VPC
+## First create the sharedsvc VPC
 
-We'll use local state, create the VPC then switch to remote state.
+We'll use local state, create the VPC, an S3 bucket, then switch to remote state.
 
-1. Define some environment variables
+1. Set your AWS_PROFILE and check token validity
+
+```bash
+$ export AWS_PROFILE=awsprofile.sharedsvc
+$ aws sts get-caller-identity
+```
+
+> *Note:* if `aws sts get-caller-identity` does not return valid JSON data for the expected account, run `aws sso login --no-browser`.
+
+2. Define some environment variables
 
 Linux:
 ```bash
 AWS_ACCOUNT=$(aws sts get-caller-identity | jq -r .Account)
+AWS_ENV=sharedsvc
 AWS_REGION=eu-west-1
-export TF_VAR_aws_region=$AWS_REGION
 export TF_VAR_aws_account=$AWS_ACCOUNT
+export TF_VAR_aws_env=$AWS_ENV
+export TF_VAR_aws_region=$AWS_REGION
 ```
 
-Powershell:
-```pwsh
-$AWS_ACCOUNT=(aws sts get-caller-identity | jq -r .Account)
-$AWS_REGION="eu-west-1"
-$Env:TF_VAR_aws_region=$AWS_REGION
-$Env:TF_VAR_aws_account=$AWS_ACCOUNT
-```
-
-2. Check the variables
+3. Check the variables
 
 ```bash
 echo -e "AWS_ACCOUNT: $AWS_ACCOUNT\nAWS_REGION: $AWS_REGION\nTF_VAR_aws_account: $TF_VAR_aws_account\nTF_VAR_aws_region: $TF_VAR_aws_region\n"
 ```
 
+4. Initialise the OpenTofu backend
+
+```bash
+$ cd /workspace/leeroy/tf/env/sharedsvc/vpc/
+$ tofu init
+```
+
+5. Run a OpenTofu plan to validate what it would do
+
+```bash
+$ tofu plan
+```
+
+6. Run the OpenTofu apply to create the shared service VPC and its shared state bucket.
+
+```bash
+$ tofu apply -auto-approve
+```
+
+7. Migrate to shared state, first uncomment the following in `providers.tf`
+
+```hcl
+  backend "s3" {
+    bucket       = "${var.aws_account}-${var.aws_env}-s3-state-bucket"
+    encrypt      = true
+    key          = "${var.aws_account}-${var.aws_env}-s3-state-key"
+    region       = var.aws_region
+    # This enables native S3 state locking
+    use_lockfile = true
+  }
+```
+
+8. Migrate from local state to S3 shared state.
+
+```bash
+$tofu init -migrate-state -force-copy
+```
+
+## Next create the development VPC
+
+Repeat the previous steps, switching the paths and variables for the development member account.
+
+1. Set your AWS_PROFILE and check token validity
+
+```bash
+$ export AWS_PROFILE=awsprofile.development
+$ aws sts get-caller-identity
+```
+
+2. Define some environment variables
+
+Linux:
+```bash
+AWS_ACCOUNT=$(aws sts get-caller-identity | jq -r .Account)
+AWS_ENV=development
+AWS_REGION=eu-west-1
+export TF_VAR_aws_account=$AWS_ACCOUNT
+export TF_VAR_aws_env=$AWS_ENV
+export TF_VAR_aws_region=$AWS_REGION
+```
+
+3. Initialise the OpenTofu backend
+
+```bash
+$ cd /workspace/leeroy/tf/env/development/vpc/
+$ tofu init
+```
+
+
+# Powershell Environment
+
+Powershell:
 ```pwsh
-Write-Output "AWS_ACCOUNT: $AWS_ACCOUNT`nAWS_REGION: $AWS_REGION`nTF_VAR_aws_account: $TF_VAR_aws_account`nTF_VAR_aws_region: $TF_VAR_aws_region"
+$AWS_ACCOUNT=(aws sts get-caller-identity | jq -r .Account)
+$AWS_ENV="sharedsvc"
+$AWS_REGION="eu-west-1"
+$Env:TF_VAR_aws_account=$AWS_ACCOUNT
+$Env:TF_VAR_aws_env=$AWS_ENV
+$Env:TF_VAR_aws_region=$AWS_REGION
 ```
 
-3. Initialise the Terraform backend
-
-```bash
-$ cd tf/env/sharedsvc/vpc/
-$ terraform init
+```pwsh
+Write-Output "AWS_ACCOUNT: $AWS_ACCOUNT`nAWS_ENV: $AWS_ENV`nAWS_REGION: $AWS_REGION`nTF_VAR_aws_account: $TF_VAR_aws_account`nTF_VAR_aws_env: $TF_VAR_aws_env`nTF_VAR_aws_region: $TF_VAR_aws_region"
 ```
-
-4. Run a Terraform plan to validate what it would do
-
-```bash
-$ terraform plan
-```
-
-5. Run the Terraform apply to create the shared service VPC
-
-```bash
-$ terraform apply -auto-approve
-```
-
 
 # References
-
 - [https://renatogolia.com/2020/10/12/working-with-aws-in-devcontainers/](<https://renatogolia.com/2020/10/12/working-with-aws-in-devcontainers/>)
 - [https://happihacking.com/blog/posts/2024/dev-containers-uids/](<https://happihacking.com/blog/posts/2024/dev-containers-uids/>)
 - [https://dev.to/graezykev/dev-containers-part-2-image-features-workspace-environment-variables-375o](<https://dev.to/graezykev/dev-containers-part-2-image-features-workspace-environment-variables-375o>)
+- [https://terrateam.io/blog/migrating-terraform-state-between-backends/](<https://terrateam.io/blog/migrating-terraform-state-between-backends/>)
