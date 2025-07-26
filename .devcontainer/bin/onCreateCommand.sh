@@ -39,5 +39,16 @@ chmod +x install-opentofu.sh
 # Remove the installer:
 rm -f install-opentofu.sh
 
-# Enable bash completion
+# Enable bash completion for tofu
 tofu -install-autocomplete
+
+# Install and enable fuzzy find
+sudo apt-get install -y fzf
+
+cat <<EOF >> ~/.bashrc
+
+# enable fuzzyfind history searching
+# Fedora: eval "\$(fzf --bash)"
+# Debian: source /usr/share/doc/fzf/examples/key-bindings.bash
+source /usr/share/doc/fzf/examples/key-bindings.bash
+EOF
