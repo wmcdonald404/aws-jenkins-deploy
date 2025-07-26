@@ -122,7 +122,7 @@ echo -e "AWS_ACCOUNT: $AWS_ACCOUNT\nAWS_REGION: $AWS_REGION\nTF_VAR_aws_account:
 4. Initialise the OpenTofu backend
 
 ```bash
-$ cd /workspace/leeroy/tf/env/sharedsvc/vpc/
+$ cd /workspace/leeroy/tf/env/sharedsvc/
 $ tofu init
 ```
 
@@ -156,6 +156,8 @@ $ tofu apply -auto-approve
 ```bash
 $tofu init -migrate-state -force-copy
 ```
+
+At this point we can remove the terraform.tfstate, terraform.tfstate.backup, and .terraform.lock.hcl from the local file system. 
 
 ## Next create the development VPC
 

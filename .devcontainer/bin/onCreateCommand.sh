@@ -1,5 +1,12 @@
 #!/usr/bin/env bash
 
+# common aliases
+cat <<EOF >> ~/.bash_aliases
+alias ll='ls -l'
+alias la='ls -A'
+alias l='ls -CF'
+EOF
+
 # update base sources and packages
 sudo apt-get update
 sudo apt-get -y upgrade
@@ -42,6 +49,12 @@ rm -f install-opentofu.sh
 # Enable bash completion for tofu
 tofu -install-autocomplete
 
+cat <<EOF >> ~/.bash_aliases
+
+alias tf=tofu
+alias terraform=tofu
+EOF
+
 # Install and enable fuzzy find
 sudo apt-get install -y fzf
 
@@ -51,4 +64,13 @@ cat <<EOF >> ~/.bashrc
 # Fedora: eval "\$(fzf --bash)"
 # Debian: source /usr/share/doc/fzf/examples/key-bindings.bash
 source /usr/share/doc/fzf/examples/key-bindings.bash
+EOF
+
+# Install and enable direnv
+sudo apt-get install -y direnv
+
+cat <<EOF >> ~/.bashrc
+
+# enable direnv
+eval "\$(direnv hook bash)"
 EOF
