@@ -154,7 +154,7 @@ $ tofu apply -auto-approve
 8. Migrate from local state to S3 shared state.
 
 ```bash
-$tofu init -migrate-state -force-copy
+$ tofu init -migrate-state -force-copy
 ```
 
 At this point we can remove the terraform.tfstate, terraform.tfstate.backup, and .terraform.lock.hcl from the local file system. 
