@@ -16,7 +16,7 @@ module "vpc" {
   # create_egress_only_igw = true
 
   tags = {
-    Terraform = "true"
     Environment = "${var.aws_env}"
+    Terraform = "true"
   }
 }
