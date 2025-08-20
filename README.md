@@ -1,4 +1,4 @@
-# leeroy-deploy
+# aws-jenkins-deploy
 Boostrap an environment, deploy resources via paramaterised, versioned Jenkins pipeline.
 
 ## Overview
