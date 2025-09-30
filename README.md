@@ -48,7 +48,7 @@ Let's mirror some upstream AWS OpenTofu modules.
 If we have an empty module tree we can loop over each repo and pull it down as follows:
 
 ```
-MODULE_DIR=/workspaces/leeroy/tf/modules/
+MODULE_DIR=/workspaces/aws-jenkins-deploy/tf/modules/
 declare -a URLS=(
 "https://github.com/terraform-aws-modules/terraform-aws-vpc"
 "https://github.com/terraform-aws-modules/terraform-aws-s3-bucket"
@@ -66,25 +66,25 @@ If we need to do individual modules we can process each as follows:
 
 1. Clone the AWS VPC module and clear its upstream Git and Github history.
 ```bash
-$ git clone https://github.com/terraform-aws-modules/terraform-aws-vpc /workspaces/leeroy/tf/modules/terraform-aws-vpc
+$ git clone https://github.com/terraform-aws-modules/terraform-aws-vpc /workspaces/aws-jenkins-deploy/tf/modules/terraform-aws-vpc
 $ rm -rf $_/.git $_/.github
 ```
 
 2. Clone the AWS S3 bucket module and clear its upstream Git and Github history.
 ```bash
-git clone https://github.com/terraform-aws-modules/terraform-aws-s3-bucket /workspaces/leeroy/tf/modules/terraform-aws-s3-bucket
+git clone https://github.com/terraform-aws-modules/terraform-aws-s3-bucket /workspaces/aws-jenkins-deploy/tf/modules/terraform-aws-s3-bucket
 rm -rf $_/.git $_/.github
 ```
 
 3. Clone the AWS Key Pair module
 ```bash
-git clone https://github.com/terraform-aws-modules/terraform-aws-key-pair /workspaces/leeroy/tf/modules/terraform-aws-key-pair
+git clone https://github.com/terraform-aws-modules/terraform-aws-key-pair /workspaces/aws-jenkins-deploy/tf/modules/terraform-aws-key-pair
 rm -rf $_/.git $_/.github
 ```
 
 4. Clone the AWS EC2 instance module and clear its upstream Git and Github history.
 ```bash
-git clone https://github.com/terraform-aws-modules/terraform-aws-ec2-instance /workspaces/leeroy/tf/modules/terraform-aws-ec2-instance
+git clone https://github.com/terraform-aws-modules/terraform-aws-ec2-instance /workspaces/aws-jenkins-deploy/tf/modules/terraform-aws-ec2-instance
 rm -rf $_/.git $_/.github
 ```
 
@@ -122,7 +122,7 @@ echo -e "AWS_ACCOUNT: $AWS_ACCOUNT\nAWS_REGION: $AWS_REGION\nTF_VAR_aws_account:
 4. Initialise the OpenTofu backend
 
 ```bash
-$ cd /workspace/leeroy/tf/env/sharedsvc/
+$ cd /workspace/aws-jenkins-deploy/tf/env/sharedsvc/
 $ tofu init
 ```
 
@@ -185,7 +185,7 @@ export TF_VAR_aws_region=$AWS_REGION
 3. Initialise the OpenTofu backend
 
 ```bash
-$ cd /workspace/leeroy/tf/env/development/vpc/
+$ cd /workspace/aws-jenkins-deploy/tf/env/development/vpc/
 $ tofu init
 ```
 
