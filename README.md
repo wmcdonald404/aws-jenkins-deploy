@@ -189,6 +189,45 @@ $ cd /workspace/aws-jenkins-deploy/tf/env/development/vpc/
 $ tofu init
 ```
 
+4. Initialise the OpenTofu backend
+
+```bash
+$ cd /workspaces/aws-jenkins-deploy/tf/env/development/
+$ tofu init
+```
+
+5. Run a OpenTofu plan to validate what it would do
+
+```bash
+$ tofu plan
+```
+
+6. Run the OpenTofu apply to create the shared service VPC and its shared state bucket.
+
+```bash
+$ tofu apply -auto-approve
+```
+
+7. Migrate to shared state, first uncomment the following in `providers.tf`
+
+```hcl
+  backend "s3" {
+    bucket       = "${var.aws_account}-${var.aws_env}-s3-state-bucket"
+    encrypt      = true
+    key          = "${var.aws_account}-${var.aws_env}-s3-state-key"
+    region       = var.aws_region
+    # This enables native S3 state locking
+    use_lockfile = true
+  }
+```
+
+8. Migrate from local state to S3 shared state.
+
+```bash
+$ tofu init -migrate-state -force-copy
+```
+
+
 
 # Powershell Environment
 
